@@ -4,11 +4,24 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import * as Device from 'expo-device';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
-
+import * as Notifications from 'expo-notifications';
 
 
 
 export default function App() {
+
+  //use effect is to run something on the start of thecode
+  React.useEffect(() => {
+    //asks for notficiation premission
+    const requestPermissions = async () => {
+      const { status } = await Notifications.requestPermissionsAsync();
+      if (status !== 'granted') {
+        alert('Permission for notifications is not granted!');
+      }
+    };
+    requestPermissions();
+  }, []);
+
   const android = Device.osVersion;
 
   //var to hold the massage
@@ -16,7 +29,8 @@ export default function App() {
   const showMessage = () => {
     setMessage(android);
   }
-
+ 
+  //a thing to send a post to a api
   function handlePost() {
     const sendData = async () => {
       const dataToSend = {
@@ -34,19 +48,42 @@ export default function App() {
     sendData();
   }
 
+  //Config our notification
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: true,
+      shouldSetBadge: true,
+    }),
+  })
+
+  //a cool function to send a notification
+  function improud() {
+    //call the notification
+    
+    Notifications.scheduleNotificationAsync({
+    content: {
+      title: 'dad',
+      body: "Im proud of u son🫡",
+    },
+    trigger: null,
+    })
+    console.log('Im proud')
+  };
 
   return (
     <View style={styles.container}>
       <Text>Hello world</Text>
-      <Button style={styles.buttonSHOW}
-        title="Post"
-        onPress={handlePost}
+      <Button
+        title="Show Android and model"
+        onPress={showMessage}
       />
       <Button
-      title='Show Android and mmodel'
-      onPress={showMessage}
+        title="Dad? is that you?"
+        onPress={improud}
       />
       {message !== '' && <Text>{message}</Text>}	
+
       <StatusBar style="auto" />
     </View>
   );
