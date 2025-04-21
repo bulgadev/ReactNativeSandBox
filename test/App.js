@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, Text, View, Button, TouchableHighlight } from 'react-native';
 import React, { useState } from 'react';
 import axios from 'axios';
 import * as Device from 'expo-device';
@@ -23,12 +23,20 @@ export default function App() {
   }, []);
 
   const android = Device.osVersion;
+  const user = Device.deviceName;
 
   //var to hold the massage
   const [message, setMessage] = useState('');
+  const [name, setName] = useState('');
   const showMessage = () => {
     setMessage(android);
   }
+  const showName = () => {
+	setName(user);
+  }
+  React.useEffect(() => {
+    showName();
+  }, []);
  
   //a thing to send a post to a api
   function handlePost() {
@@ -73,17 +81,30 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <Text>Hello world</Text>
+      <Text>U r gay</Text>
+      <Text>{name}</Text>
+      <TouchableHighlight
+      style={styles.buttonSHOW}
+      >
       <Button
+        style={styles.buttonSHOW}
         title="Show Android and model"
         onPress={showMessage}
       />
-      <Button
+      </TouchableHighlight>
+      <TouchableHighlight
+      style={styles.buttonSHOW}
+      >
+     <Button
+        style={styles.buttonSHOW}
         title="Dad? is that you?"
         onPress={improud}
       />
-      {message !== '' && <Text>{message}</Text>}	
+ 
 
+      </TouchableHighlight>
+          {message !== '' && <Text>{message}</Text>}	
+	  
       <StatusBar style="auto" />
     </View>
   );
@@ -98,6 +119,8 @@ const styles = StyleSheet.create({
   },
 
   buttonSHOW: {
-    backgroundColor: 'red',
+    padding: '4',
+    margin: '6',
+    gap: '15',
   },
 });
